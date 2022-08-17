@@ -116,11 +116,57 @@ module.exports.logout_get = async (req, res) => {
 
 //User Update (Modify User Credentials)
 module.exports.user_update = async (req, res) => {
-    const { name, last_name, email, password } = req.body
-    const updatedUser = User.findOneAndUpdate(
-        { _id: req.userId },
-        {}
-    )
+    const { username, fullname, email, bio } = req.body;
+    try {
+		const user = await User.findById({ _id: req.params.userId});
+		if (user) {
+			try {
+				const updatedUser = await User.findByIdAndUpdate(
+					{ _id: user.id },
+					{
+						username: username,
+						fullname: fullname,
+                        email: email,
+						bio: bio
+					},
+					{ new: true }
+				);
+
+				console.log({ message: 'User updated', user: updatedUser });
+				return res.status(200).json({ message: 'Patient updated', user: updatedUser });
+
+			} catch (err) {
+
+				handleErrors(err);
+				console.log({ message: 'User could not be updated' });
+				return res.json({ Error: 'User could not be updated' });
+
+			}
+        }
+        console.log({ message: 'User not found' });
+		res.status(404).json({ message: 'User not found' });
+
+	} catch (err) {
+
+		handleErrors(err);
+		console.log({ Error: 'Valid ObjectId missing' });
+		res.json({ Error: 'Valid ObjectId missing' });
+
+	}
 }
 
-
+//Get all users
+module.exports.getAllUsers = async (req, res, next) => {
+    try {
+      const users = await User.find({ _id: { $ne: req.params.id } }).select([
+        "username",
+        "fullname",
+        "followernumber",
+        "followingnumber",
+        "_id",
+      ]);
+      return res.json(users);
+    } catch (ex) {
+      next(ex);
+    }
+  };
