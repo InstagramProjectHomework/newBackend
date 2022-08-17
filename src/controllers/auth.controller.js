@@ -113,6 +113,7 @@ module.exports.logout_get = async (req, res) => {
 }
 
 
+
 //User Update (Modify User Credentials)
 module.exports.user_update = async (req, res) => {
     const { username, fullname, email, bio } = req.body;
@@ -125,8 +126,8 @@ module.exports.user_update = async (req, res) => {
 					{
 						username: username,
 						fullname: fullname,
-						bio: bio,
-						email: email
+                        email: email,
+						bio: bio
 					},
 					{ new: true }
 				);
@@ -154,5 +155,18 @@ module.exports.user_update = async (req, res) => {
 	}
 }
 
-
-
+//Get all users
+module.exports.getAllUsers = async (req, res, next) => {
+    try {
+      const users = await User.find({ _id: { $ne: req.params.id } }).select([
+        "username",
+        "fullname",
+        "followernumber",
+        "followingnumber",
+        "_id",
+      ]);
+      return res.json(users);
+    } catch (ex) {
+      next(ex);
+    }
+  };
