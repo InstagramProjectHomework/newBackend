@@ -13,7 +13,7 @@ const nodemailer = require("nodemailer");
     },
   });
 
-  const sendEmail = async(email, token) =>{
+  export const sendEmail = async(email, token) =>{
 
     try {
       await transporter.sendMail({
@@ -28,6 +28,5 @@ const nodemailer = require("nodemailer");
     }
   }
 
-  module.exports = {
-    sendEmail
-  }
+  checkToken(token);
+

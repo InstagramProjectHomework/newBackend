@@ -139,7 +139,7 @@ module.exports.user_update = async (req, res) => {
 				);
 
 				console.log({ message: 'User updated', user: updatedUser });
-				return res.status(200).json({ message: 'Patient updated', user: updatedUser });
+				return res.status(200).json({ message: 'User updated', user: updatedUser });
 
 			} catch (err) {
 
@@ -161,4 +161,29 @@ module.exports.user_update = async (req, res) => {
 	}
 }
 
+moudles.exports.verifyEmail = async (req, res) => {
+    try{
+    const token = req.params.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById({ _id: userId });
+        if(user){
+            try{
+                const updatedUser = await User.findByIdAndUpdate({ _id: user.id }, {EmailisVerified:true});
+                console.log({ message: 'User Email verified.', user: updatedUser});
+				return res.status(200).json({ message: 'User verified'});
+
+            }catch (err) {
+                handleErrors(err);
+				console.log({ message: 'User could not be updated' });
+				return res.json({ Error: 'User could not be updated' });
+            }
+        }
+        console.log({ message: 'User not found' });
+		res.status(404).json({ message: 'User not found' });
+    }catch (err) {
+        console.log({ Error: 'Can not bring token' });
+        res.json({ Error: 'Can not bring token' });
+    }
+
+}
 
