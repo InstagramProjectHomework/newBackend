@@ -2,8 +2,8 @@
   "errors": {
     "name": "",
     "last_name": "",
-    "email": "Please enter an email",
-    "password": "Please enter a password",
+    "email": "",
+    "password": "",
     "username": "Please enter your username",
     "fullname": "Please enter your full name."
   }

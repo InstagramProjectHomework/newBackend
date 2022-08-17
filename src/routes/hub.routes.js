@@ -19,6 +19,7 @@ router.get('/logout', authCtrl.logout_get);
 
 //User Management
 router.get('/user/:user');
+router.patch('/user/userupdate/:userId', authJwt.verifyToken ,authCtrl.user_update, );
 
 //Posts Management
 router.post('/post',authJwt.verifyToken, postCtrl.create_post);
