@@ -28,5 +28,4 @@ const nodemailer = require("nodemailer");
     }
   }
 
-  checkToken(token);
 

@@ -161,7 +161,7 @@ module.exports.user_update = async (req, res) => {
 	}
 }
 
-moudles.exports.verifyEmail = async (req, res) => {
+module.exports.verifyEmail = async (req, res) => {
     try{
     const token = req.params.token;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
