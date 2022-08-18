@@ -57,3 +57,30 @@ module.exports.getpostbyid = async(req, res) => {
     const post = await Post.findById({_id: req.params.postid});
     res.status(200).json({post});
 }
+
+module.exports.allpostsbyuser = async(req,res) => {
+    const token = req.cookies['jwt'];
+    if(!token) return res.status(403).json({message: 'Invalid token'});
+    const decoded = jwt.verify(token,process.env.JWT_SECRET);
+    const userId = decoded.id;
+    let posts= [];
+    User;
+    try{
+        const userData = await User.findById({ _id: userId });
+        let postsId = userData.posts;
+        let i = 0;
+        for(i; i < postsId.length; i++) {
+            let postId = postsId[i];
+            let post = await Post.findById({ _id: postId });
+            posts.push(post);
+        }
+    }catch (err) {
+        console.log(handleErrors(err));
+				console.log({ Error: 'Post could not be retrieved' });
+				return res.json({ Error: 'Post could not be retrieved' });
+    }
+
+
+   // const post = await Post.findById({_id: req.params.postid});
+    res.status(200).json({posts});
+}

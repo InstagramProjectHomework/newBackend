@@ -24,7 +24,9 @@ router.post('/user/verifyEmail/:token', authCtrl.verifyEmail);
 
 //Posts Management
 router.post('/post',authJwt.verifyToken, postCtrl.create_post);
-router.get('/post/all', authJwt.verifyToken, postCtrl.allposts);
+router.get('/post/all',authJwt.verifyToken, postCtrl.allposts);
+router.get('/post/user',authJwt.verifyToken, postCtrl.allpostsbyuser);
+
 router.get('/post/:postid', authJwt.verifyToken, postCtrl.getpostbyid);
 
 //Comments Management
