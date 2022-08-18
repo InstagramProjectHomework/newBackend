@@ -9,6 +9,7 @@ const postSchema = new mongoose.Schema({
     },
 
     likenumber: {type: Number},
+    description :{type: String},
     commentnumber:{type: Number},
     comments: {
         type: Array

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 import { handleErrors } from "../errors/handler.error";
 
 module.exports.create_post = async (req, res) => {
-    const {photolink, comments} = await req.body;
+    const {photolink, description ,comments} = await req.body;
     const token = req.cookies['jwt'];
 
     if(!token) return res.status(403).json({message: 'Invalid token'});
@@ -17,6 +17,7 @@ module.exports.create_post = async (req, res) => {
             userId:decoded.id,
             photolink: photolink,
             likenumber: 0,
+            description: description,
             commentnumber: 0,
             comments: comments
         }

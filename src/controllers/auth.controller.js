@@ -187,3 +187,18 @@ module.exports.verifyEmail = async (req, res) => {
 
 }
 
+module.exports.getAllUsers = async (req, res, next) => {
+    try {
+      const users = await User.find({ _id: { $ne: req.params.id } }).select([
+        "username",
+        "fullname",
+        "followernumber",
+        "followingnumber",
+        "_id",
+        "userphoto",
+      ]);
+      return res.json(users);
+    } catch (ex) {
+      next(ex);
+    }
+  };

@@ -21,6 +21,7 @@ router.get('/logout', authCtrl.logout_get);
 router.get('/user/:user');
 router.patch('/user/userupdate/:userId', authJwt.verifyToken, authCtrl.user_update,);
 router.post('/user/verifyEmail/:token', authCtrl.verifyEmail);
+router.get('/user/getallusers/:userId', authJwt.verifyToken ,authCtrl.getAllUsers);
 
 //Posts Management
 router.post('/post',authJwt.verifyToken, postCtrl.create_post);
