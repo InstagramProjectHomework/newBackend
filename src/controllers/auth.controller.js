@@ -164,6 +164,7 @@ module.exports.getAllUsers = async (req, res, next) => {
         "followernumber",
         "followingnumber",
         "_id",
+        "userphoto",
       ]);
       return res.json(users);
     } catch (ex) {
