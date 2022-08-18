@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 import User from '../models/User';
 import { handleErrors } from "../errors/handler.error";
 const { sendEmail } = require('../middlewares/Mailer');
+const {sendPassword } = require('../middlewares/Mailer');
 
 //3h time in ms
 const Time = (1000 * 60 * 60 * 3);
@@ -122,9 +123,13 @@ module.exports.logout_get = async (req, res) => {
 
 //User Update (Modify User Credentials)
 module.exports.user_update = async (req, res) => {
-    const { username, fullname, email, bio } = req.body;
+    const { username, fullname, email, bio, password } = req.body;
+    const token = req.cookies['jwt'];
+    if(!token) return res.status(403).json({message: 'Invalid token'});
+    const decoded = jwt.verify(token,process.env.JWT_SECRET);
+    req.userid= decoded.id;
     try {
-		const user = await User.findById({ _id: req.params.userId});
+		const user = await User.findById({ _id: req.userId});
 		if (user) {
 			try {
 				const updatedUser = await User.findByIdAndUpdate(
@@ -132,14 +137,16 @@ module.exports.user_update = async (req, res) => {
 					{
 						username: username,
 						fullname: fullname,
+                        password: password,
 						bio: bio,
 						email: email
 					},
 					{ new: true }
 				);
-
+                updatedUser.save();
 				console.log({ message: 'User updated', user: updatedUser });
 				return res.status(200).json({ message: 'User updated', user: updatedUser });
+
 
 			} catch (err) {
 
@@ -202,3 +209,29 @@ module.exports.getAllUsers = async (req, res, next) => {
       next(ex);
     }
   };
+
+module.exports.resetPassword = async (req, res, next) => {
+    const {email} = req.body;
+    try {
+    const user = await User.findOne({ email: email});
+    if(user){
+        try {
+            const updatedUser = await User.findByIdAndUpdate({ _id: user.id }, {password: 'YnJkLmn2D'}, {new: true});
+                console.log({ message: 'User Password changed.', user: updatedUser});
+                await sendPassword(email);
+                updatedUser.save();
+
+        } catch (error) {
+            handleErrors(error);
+            console.log({ message: 'User could not be updated' });
+            return res.json({ Error: 'User could not be updated' });
+        }
+    }
+    console.log({ message: 'User not found' });
+    res.status(404).json({ message: 'User not found' });
+    } catch(error) {
+        console.log({ Error: 'Can not bring email' });
+        res.json({ Error: 'Can not bring email' });
+    }
+
+}

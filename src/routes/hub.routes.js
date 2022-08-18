@@ -19,9 +19,12 @@ router.get('/logout', authCtrl.logout_get);
 
 //User Management
 router.get('/user/:user');
-router.patch('/user/userupdate/:userId', authJwt.verifyToken, authCtrl.user_update,);
-router.post('/user/verifyEmail/:token', authCtrl.verifyEmail);
+router.patch('/user/userupdate/', authJwt.verifyToken, authCtrl.user_update,);
+router.post('/user/userupdate/', authJwt.verifyToken, authCtrl.user_update,);
+
+router.get('/user/verifyEmail/:token', authCtrl.verifyEmail);
 router.get('/user/getallusers/:userId', authJwt.verifyToken ,authCtrl.getAllUsers);
+router.post('/user/resetpassword', authCtrl.resetPassword);
 
 //Posts Management
 router.post('/post',authJwt.verifyToken, postCtrl.create_post);
